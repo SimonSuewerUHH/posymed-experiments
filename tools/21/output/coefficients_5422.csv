@@ -1,0 +1,16 @@
+class,feature,coef
+Setosa,(intercept),9.854437289042021
+Setosa,sepal.length,-0.4246821327261543
+Setosa,sepal.width,0.9671413245643123
+Setosa,petal.length,-2.5155282690691085
+Setosa,petal.width,-1.0822862173288321
+Versicolor,(intercept),2.23270878341247
+Versicolor,sepal.length,0.5350942237266967
+Versicolor,sepal.width,-0.3207931064442392
+Versicolor,petal.length,-0.20713148394654132
+Versicolor,petal.width,-0.943163373881478
+Virginica,(intercept),-12.087146072454694
+Virginica,sepal.length,-0.11041209100053848
+Virginica,sepal.width,-0.6463482181200763
+Virginica,petal.length,2.722659753015649
+Virginica,petal.width,2.025449591210319

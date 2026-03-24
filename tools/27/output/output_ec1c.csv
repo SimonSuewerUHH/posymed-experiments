@@ -1,0 +1,2 @@
+model,n_samples,n_clusters,silhouette,davies_bouldin,calinski_harabasz,adjusted_rand,adjusted_mutual_info
+label,569,3,0.21703757357005524,2.9329319977053636,339.1300469071317,0.8101885779241028,0.7171337244975234

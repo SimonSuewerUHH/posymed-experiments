@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset='utf-8'>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:24px;}
+table{border-collapse:collapse;width:100%;max-width:980px;margin-bottom:24px;}
+th,td{border:1px solid #ddd;padding:8px;}
+th{background:#f6f6f6;text-align:left;}
+code{background:#f1f1f1;padding:1px 4px;border-radius:4px;}
+</style></head><body>
+<h2>Logistic Regression Explainability</h2>
+<p>Coefficients are shown per class. Larger positive coefficients increase the log-odds of the class; negative decrease.</p>
+<h3>Class: <code>Setosa</code></h3>
+<h4>Top positive coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>sepal.width</code></td><td>0.967141</td></tr>
+<tr><td><code>sepal.length</code></td><td>-0.424682</td></tr>
+<tr><td><code>petal.width</code></td><td>-1.08229</td></tr>
+<tr><td><code>petal.length</code></td><td>-2.51553</td></tr>
+</table>
+<h4>Top negative coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>petal.length</code></td><td>-2.51553</td></tr>
+<tr><td><code>petal.width</code></td><td>-1.08229</td></tr>
+<tr><td><code>sepal.length</code></td><td>-0.424682</td></tr>
+<tr><td><code>sepal.width</code></td><td>0.967141</td></tr>
+</table>
+<h3>Class: <code>Versicolor</code></h3>
+<h4>Top positive coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>sepal.length</code></td><td>0.535094</td></tr>
+<tr><td><code>petal.length</code></td><td>-0.207131</td></tr>
+<tr><td><code>sepal.width</code></td><td>-0.320793</td></tr>
+<tr><td><code>petal.width</code></td><td>-0.943163</td></tr>
+</table>
+<h4>Top negative coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>petal.width</code></td><td>-0.943163</td></tr>
+<tr><td><code>sepal.width</code></td><td>-0.320793</td></tr>
+<tr><td><code>petal.length</code></td><td>-0.207131</td></tr>
+<tr><td><code>sepal.length</code></td><td>0.535094</td></tr>
+</table>
+<h3>Class: <code>Virginica</code></h3>
+<h4>Top positive coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>petal.length</code></td><td>2.72266</td></tr>
+<tr><td><code>petal.width</code></td><td>2.02545</td></tr>
+<tr><td><code>sepal.length</code></td><td>-0.110412</td></tr>
+<tr><td><code>sepal.width</code></td><td>-0.646348</td></tr>
+</table>
+<h4>Top negative coefficients</h4>
+<table><tr><th>Feature</th><th>Coef</th></tr>
+<tr><td><code>sepal.width</code></td><td>-0.646348</td></tr>
+<tr><td><code>sepal.length</code></td><td>-0.110412</td></tr>
+<tr><td><code>petal.width</code></td><td>2.02545</td></tr>
+<tr><td><code>petal.length</code></td><td>2.72266</td></tr>
+</table>
+</body></html>
