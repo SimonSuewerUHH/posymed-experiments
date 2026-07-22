@@ -1,0 +1,55 @@
+class: GalaxyWorkflow
+label: PoSyMed-WF7-fetch-onehot-two-cluster
+doc: >
+  Galaxy re-implementation of PoSyMed Workflow 7 (Supplementary material 2, Table 5, ID 7):
+  fetch (UCI 17) -> one-hot -> shared input to two clustering branches (Birch, GMM).
+inputs: {}
+steps:
+  fetch:
+    tool_id: posymed_fetch
+    label: fetch
+    state:
+      dataset_id: 17
+  onehot:
+    tool_id: posymed_onehot
+    label: onehot
+    in:
+      features: fetch/dataset
+    state:
+      columns: ""
+      drop_first: false
+      bool_to_number: true
+      dummy_na: false
+      keep_original: false
+      prefix_sep: "__"
+  birch:
+    tool_id: posymed_birch
+    label: birch
+    in:
+      features: onehot/encoded
+    state:
+      threshold: 0.5
+      branching_factor: 50
+      n_clusters: 3
+      use_global_clustering: true
+      standardize: true
+  gmm:
+    tool_id: posymed_gmm
+    label: gmm
+    in:
+      features: onehot/encoded
+    state:
+      n_components: 3
+      covariance_type: full
+      tol: 0.001
+      reg_covar: 0.000001
+      max_iter: 100
+      n_init: 1
+      init_params: kmeans
+      random_state: 42
+      standardize: true
+outputs:
+  birch_labels:
+    outputSource: birch/labels
+  gmm_labels:
+    outputSource: gmm/labels

@@ -1,0 +1,55 @@
+<tool id="posymed_gmm" name="GaussianMixtureModel" version="1.0.0" profile="21.09">
+    <description>Probabilistic clustering with scikit-learn Gaussian Mixture Models (EM)</description>
+    <requirements>
+        <requirement type="package" version="1.5.2">scikit-learn</requirement>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/gmm.py'
+            --in '$features'
+            --labels-out '$labels'
+            --responsibilities-out '$responsibilities'
+            --weights-out '$weights'
+            --means-out '$means'
+            --covariances-out '$covariances'
+            --n-components '$n_components'
+            --covariance-type '$covariance_type'
+            --tol '$tol'
+            --reg-covar '$reg_covar'
+            --max-iter '$max_iter'
+            --n-init '$n_init'
+            --init-params '$init_params'
+            --random-state '$random_state'
+            --standardize '$standardize'
+    ]]></command>
+    <inputs>
+        <param name="features" type="data" format="csv" label="Features (CSV)"/>
+        <param name="n_components" type="integer" value="3" label="n_components"/>
+        <param name="covariance_type" type="select" label="covariance_type">
+            <option value="full" selected="true">full</option>
+            <option value="tied">tied</option>
+            <option value="diag">diag</option>
+            <option value="spherical">spherical</option>
+        </param>
+        <param name="tol" type="float" value="0.001" label="tol"/>
+        <param name="reg_covar" type="float" value="0.000001" label="reg_covar"/>
+        <param name="max_iter" type="integer" value="100" label="max_iter"/>
+        <param name="n_init" type="integer" value="1" label="n_init"/>
+        <param name="init_params" type="select" label="init_params">
+            <option value="kmeans" selected="true">kmeans</option>
+            <option value="random">random</option>
+        </param>
+        <param name="random_state" type="integer" value="42" label="random_state"/>
+        <param name="standardize" type="boolean" truevalue="1" falsevalue="0" checked="true" label="standardize"/>
+    </inputs>
+    <outputs>
+        <data name="labels" format="csv" label="gmm_labels"/>
+        <data name="responsibilities" format="csv" label="gmm_responsibilities"/>
+        <data name="weights" format="csv" label="gmm_weights"/>
+        <data name="means" format="csv" label="gmm_means"/>
+        <data name="covariances" format="csv" label="gmm_covariances"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **GaussianMixtureModel** app.
+    ]]></help>
+</tool>

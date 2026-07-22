@@ -1,0 +1,33 @@
+<tool id="posymed_onehot" name="OneHotEncoding" version="1.0.0" profile="21.09">
+    <description>pandas-only one-hot encoding of categorical columns (CSV to CSV)</description>
+    <requirements>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/onehot.py'
+            --in '$features'
+            --out '$encoded'
+            --columns '$columns'
+            --drop-first '$drop_first'
+            --bool-to-number '$bool_to_number'
+            --dummy-na '$dummy_na'
+            --keep-original '$keep_original'
+            --prefix-sep '$prefix_sep'
+    ]]></command>
+    <inputs>
+        <param name="features" type="data" format="csv" label="Input table (CSV)"/>
+        <param name="columns" type="text" value="" label="Columns to encode"
+               help="Comma-separated; empty = auto-detect categorical columns"/>
+        <param name="drop_first" type="boolean" truevalue="1" falsevalue="0" checked="false" label="drop_first"/>
+        <param name="bool_to_number" type="boolean" truevalue="1" falsevalue="0" checked="true" label="bool_to_number"/>
+        <param name="dummy_na" type="boolean" truevalue="1" falsevalue="0" checked="false" label="dummy_na"/>
+        <param name="keep_original" type="boolean" truevalue="1" falsevalue="0" checked="false" label="keep_original"/>
+        <param name="prefix_sep" type="text" value="__" label="prefix_sep"/>
+    </inputs>
+    <outputs>
+        <data name="encoded" format="csv" label="encoded"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **OneHotEncoding** app (pandas.get_dummies).
+    ]]></help>
+</tool>

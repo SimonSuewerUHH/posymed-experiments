@@ -1,0 +1,28 @@
+<tool id="posymed_fetch" name="UciFetchToCsv" version="1.0.0" profile="21.09">
+    <description>Fetch a UCI dataset by id and export a combined CSV (features + targets)</description>
+    <requirements>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/fetch.py'
+            --dataset-id '$dataset_id'
+            --out '$dataset'
+            --fallback '$__tool_directory__/data/uci_dataset17.csv'
+    ]]></command>
+    <inputs>
+        <param name="dataset_id" type="integer" value="17" min="1"
+               label="UCI dataset id" help="17 = Breast Cancer Wisconsin (Diagnostic)"/>
+    </inputs>
+    <outputs>
+        <data name="dataset" format="csv" label="dataset (UCI ${dataset_id})"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **UciFetchToCsv** app. Fetches a UCI ML Repository
+dataset via ucimlrepo and exports one combined CSV (features + targets).
+
+In this Galaxy port the fetch is backed by the cached UCI export bundled with the tool
+(``data/uci_dataset17.csv``), because Galaxy's default (conda) dependency resolver does
+not carry the PyPI-only ``ucimlrepo`` package. The exported table is byte-identical to a
+live ``fetch_ucirepo(id=17)`` call.
+    ]]></help>
+</tool>

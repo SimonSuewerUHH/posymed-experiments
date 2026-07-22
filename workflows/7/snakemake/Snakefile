@@ -1,0 +1,52 @@
+# Snakemake re-implementation of PoSyMed Workflow 7
+
+TOOLS    = "../common/tools"
+FALLBACK = "../step-1/output/uci_dataset17.csv"   # committed PoSyMed fetch output (offline fallback)
+RES      = "results"
+
+rule all:
+    input:
+        f"{RES}/birch_labels.csv",
+        f"{RES}/gmm_labels.csv"
+
+rule fetch:                       # PoSyMed app: UciFetchToCsv (dataset_id=17)
+    output:
+        f"{RES}/dataset.csv"
+    shell:
+        "python {TOOLS}/fetch.py --dataset-id 17 --out {output} --fallback {FALLBACK}"
+
+rule onehot:                      # PoSyMed app: OneHotEncoding (defaults)
+    input:
+        f"{RES}/dataset.csv"
+    output:
+        f"{RES}/encoded.csv"
+    shell:
+        "python {TOOLS}/onehot.py --in {input} --out {output}"
+
+rule birch:                       # PoSyMed app: Birch (threshold=0.5, n_clusters=3, standardize=1)
+    input:
+        f"{RES}/encoded.csv"
+    output:
+        labels=f"{RES}/birch_labels.csv",
+        centers=f"{RES}/birch_centers.csv"
+    shell:
+        "python {TOOLS}/birch.py --in {input} "
+        "--labels-out {output.labels} --centers-out {output.centers} "
+        "--threshold 0.5 --branching-factor 50 --n-clusters 3 --standardize 1"
+
+rule gmm:                         # PoSyMed app: GaussianMixtureModel (n_components=3, full, rs=42)
+    input:
+        f"{RES}/encoded.csv"
+    output:
+        labels=f"{RES}/gmm_labels.csv",
+        resp=f"{RES}/gmm_responsibilities.csv",
+        weights=f"{RES}/gmm_weights.csv",
+        means=f"{RES}/gmm_means.csv",
+        cov=f"{RES}/gmm_covariances.csv"
+    shell:
+        "python {TOOLS}/gmm.py --in {input} "
+        "--labels-out {output.labels} --responsibilities-out {output.resp} "
+        "--weights-out {output.weights} --means-out {output.means} "
+        "--covariances-out {output.cov} "
+        "--n-components 3 --covariance-type full --tol 0.001 --reg-covar 0.000001 "
+        "--max-iter 100 --n-init 1 --init-params kmeans --random-state 42 --standardize 1"

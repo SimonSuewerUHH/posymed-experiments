@@ -1,0 +1,77 @@
+class: GalaxyWorkflow
+label: PoSyMed-WF12-split-and-merge
+doc: >
+  Galaxy re-implementation of PoSyMed Workflow 12 (Supplementary material 2, Table 5, ID 12):
+  fetch (UCI 17) -> one-hot -> train-test-split -> two parallel GMM branches (train, test)
+  -> Branch-Merge-Aggregator (concat_columns).
+inputs: {}
+steps:
+  fetch:
+    tool_id: posymed_fetch
+    label: fetch
+    state:
+      dataset_id: 17
+  onehot:
+    tool_id: posymed_onehot
+    label: onehot
+    in:
+      features: fetch/dataset
+    state:
+      columns: ""
+      drop_first: false
+      bool_to_number: true
+      dummy_na: false
+      keep_original: false
+      prefix_sep: "__"
+  split:
+    tool_id: posymed_split
+    label: split
+    in:
+      input: onehot/encoded
+    state:
+      test_size: 0.25
+      random_state: 42
+      shuffle: true
+  gmm_train:
+    tool_id: posymed_gmm
+    label: gmm_train
+    in:
+      features: split/train
+    state:
+      n_components: 3
+      covariance_type: full
+      tol: 0.001
+      reg_covar: 0.000001
+      max_iter: 100
+      n_init: 1
+      init_params: kmeans
+      random_state: 42
+      standardize: true
+  gmm_test:
+    tool_id: posymed_gmm
+    label: gmm_test
+    in:
+      features: split/test
+    state:
+      n_components: 3
+      covariance_type: full
+      tol: 0.001
+      reg_covar: 0.000001
+      max_iter: 100
+      n_init: 1
+      init_params: kmeans
+      random_state: 42
+      standardize: true
+  merge:
+    tool_id: posymed_merge
+    label: merge
+    in:
+      left: gmm_test/labels       
+      right: gmm_train/labels
+    state:
+      mode: concat_columns
+      key: ""
+      how: inner
+outputs:
+  merged:
+    outputSource: merge/output

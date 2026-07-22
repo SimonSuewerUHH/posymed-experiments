@@ -1,0 +1,62 @@
+# Snakemake re-implementation of PoSyMed Workflow 12
+
+TOOLS    = "../common/tools"
+FALLBACK = "../step-1/output/uci_dataset17.csv"   # committed PoSyMed fetch output (offline fallback)
+RES      = "results"
+
+GMM_ARGS = ("--n-components 3 --covariance-type full --tol 0.001 --reg-covar 0.000001 "
+            "--max-iter 100 --n-init 1 --init-params kmeans --random-state 42 --standardize 1")
+
+rule all:
+    input:
+        f"{RES}/merged.csv"
+
+rule fetch:
+    output: f"{RES}/dataset.csv"
+    shell:  "python {TOOLS}/fetch.py --dataset-id 17 --out {output} --fallback {FALLBACK}"
+
+rule onehot:
+    input:  f"{RES}/dataset.csv"
+    output: f"{RES}/encoded.csv"
+    shell:  "python {TOOLS}/onehot.py --in {input} --out {output}"
+
+rule split:                       # PoSyMed app: train-test-split (test_size=0.25, rs=42)
+    input:  f"{RES}/encoded.csv"
+    output:
+        train=f"{RES}/train.csv",
+        test=f"{RES}/test.csv"
+    shell:
+        "python {TOOLS}/split.py --in {input} "
+        "--train-out {output.train} --test-out {output.test} "
+        "--test-size 0.25 --random-state 42 --shuffle 1"
+
+rule gmm_train:                   # GMM branch on the training split
+    input:  f"{RES}/train.csv"
+    output:
+        labels=f"{RES}/gmm_train_labels.csv",
+        resp=f"{RES}/gmm_train_resp.csv", weights=f"{RES}/gmm_train_weights.csv",
+        means=f"{RES}/gmm_train_means.csv", cov=f"{RES}/gmm_train_cov.csv"
+    shell:
+        "python {TOOLS}/gmm.py --in {input} --labels-out {output.labels} "
+        "--responsibilities-out {output.resp} --weights-out {output.weights} "
+        "--means-out {output.means} --covariances-out {output.cov} " + GMM_ARGS
+
+rule gmm_test:                    # GMM branch on the test split
+    input:  f"{RES}/test.csv"
+    output:
+        labels=f"{RES}/gmm_test_labels.csv",
+        resp=f"{RES}/gmm_test_resp.csv", weights=f"{RES}/gmm_test_weights.csv",
+        means=f"{RES}/gmm_test_means.csv", cov=f"{RES}/gmm_test_cov.csv"
+    shell:
+        "python {TOOLS}/gmm.py --in {input} --labels-out {output.labels} "
+        "--responsibilities-out {output.resp} --weights-out {output.weights} "
+        "--means-out {output.means} --covariances-out {output.cov} " + GMM_ARGS
+
+rule merge:                       # PoSyMed app: Branch-Merge-Aggregator (concat_columns)
+    input:
+        left=f"{RES}/gmm_test_labels.csv",     # shorter frame on the left (matches PoSyMed)
+        right=f"{RES}/gmm_train_labels.csv"
+    output: f"{RES}/merged.csv"
+    shell:
+        "python {TOOLS}/merge.py --left {input.left} --right {input.right} "
+        "--out {output} --mode concat_columns --how inner"

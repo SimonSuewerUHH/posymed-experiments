@@ -1,0 +1,37 @@
+<tool id="posymed_merge" name="BranchMergeAggregator" version="1.0.0" profile="21.09">
+    <description>Merge two branch outputs into one table (concat / merge-on-key)</description>
+    <requirements>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/merge.py'
+            --left '$left'
+            --right '$right'
+            --out '$output'
+            --mode '$mode'
+            --key '$key'
+            --how '$how'
+    ]]></command>
+    <inputs>
+        <param name="left" type="data" format="csv" label="Left (CSV)"/>
+        <param name="right" type="data" format="csv" label="Right (CSV)"/>
+        <param name="mode" type="select" label="mode">
+            <option value="concat_columns" selected="true">concat_columns</option>
+            <option value="concat_rows">concat_rows</option>
+            <option value="merge_on_key">merge_on_key</option>
+        </param>
+        <param name="key" type="text" value="" label="key" help="Join key for merge_on_key mode"/>
+        <param name="how" type="select" label="how">
+            <option value="inner" selected="true">inner</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+            <option value="outer">outer</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output" format="csv" label="merged"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **Branch-Merge-Aggregator** app.
+    ]]></help>
+</tool>

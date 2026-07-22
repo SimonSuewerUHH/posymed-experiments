@@ -1,0 +1,29 @@
+<tool id="posymed_split" name="TrainTestSplit" version="1.0.0" profile="21.09">
+    <description>scikit-learn train/test split of a CSV table</description>
+    <requirements>
+        <requirement type="package" version="1.5.2">scikit-learn</requirement>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/split.py'
+            --in '$input'
+            --train-out '$train'
+            --test-out '$test'
+            --test-size '$test_size'
+            --random-state '$random_state'
+            --shuffle '$shuffle'
+    ]]></command>
+    <inputs>
+        <param name="input" type="data" format="csv" label="Input table (CSV)"/>
+        <param name="test_size" type="float" value="0.25" min="0" max="1" label="test_size"/>
+        <param name="random_state" type="integer" value="42" label="random_state"/>
+        <param name="shuffle" type="boolean" truevalue="1" falsevalue="0" checked="true" label="shuffle"/>
+    </inputs>
+    <outputs>
+        <data name="train" format="csv" label="train"/>
+        <data name="test" format="csv" label="test"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **train-test-split** app (sklearn.train_test_split).
+    ]]></help>
+</tool>

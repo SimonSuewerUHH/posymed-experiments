@@ -1,0 +1,25 @@
+# Reproducible environment for the cross-engine re-implementations of PoSyMed
+# workflows (Snakemake and Nextflow ports call the ../common/tools/*.py scripts
+# from this environment; the Galaxy port resolves per-tool requirements via conda).
+#
+#   conda env create -f environment.yml
+#   conda activate posymed-cmp
+#
+# Exact versions used for the runs reported in the supplementary comparison:
+#   python 3.11.15 · pandas 3.0.3 · scikit-learn 1.9.0 · numpy · ucimlrepo
+#   snakemake 9.23.1 · nextflow 26.04.6 · openjdk 21
+name: posymed-cmp
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - snakemake-minimal
+  - nextflow
+  - openjdk=21
+  - pandas
+  - scikit-learn
+  - numpy
+  - pip
+  - pip:
+      - ucimlrepo

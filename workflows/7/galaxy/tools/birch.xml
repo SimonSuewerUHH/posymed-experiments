@@ -1,0 +1,33 @@
+<tool id="posymed_birch" name="Birch" version="1.0.0" profile="21.09">
+    <description>Scalable clustering with scikit-learn BIRCH (CF tree)</description>
+    <requirements>
+        <requirement type="package" version="1.5.2">scikit-learn</requirement>
+        <requirement type="package" version="2.2.3">pandas</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        python '$__tool_directory__/birch.py'
+            --in '$features'
+            --labels-out '$labels'
+            --centers-out '$centers'
+            --threshold '$threshold'
+            --branching-factor '$branching_factor'
+            --n-clusters '$n_clusters'
+            --use-global-clustering '$use_global_clustering'
+            --standardize '$standardize'
+    ]]></command>
+    <inputs>
+        <param name="features" type="data" format="csv" label="Features (CSV)"/>
+        <param name="threshold" type="float" value="0.5" label="threshold"/>
+        <param name="branching_factor" type="integer" value="50" label="branching_factor"/>
+        <param name="n_clusters" type="integer" value="3" label="n_clusters"/>
+        <param name="use_global_clustering" type="boolean" truevalue="1" falsevalue="0" checked="true" label="use_global_clustering"/>
+        <param name="standardize" type="boolean" truevalue="1" falsevalue="0" checked="true" label="standardize"/>
+    </inputs>
+    <outputs>
+        <data name="labels" format="csv" label="birch_labels"/>
+        <data name="centers" format="csv" label="birch_subcluster_centers"/>
+    </outputs>
+    <help><![CDATA[
+Re-implementation of the PoSyMed **Birch** app.
+    ]]></help>
+</tool>
